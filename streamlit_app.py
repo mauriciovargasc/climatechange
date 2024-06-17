@@ -52,9 +52,11 @@ fig_globe = px.choropleth(mean_temp_change_all_years,
                           color_continuous_scale=tomato_colors,
                           title='Average Mean Temperature Change (1961-2022)')
 
-fig_globe.update_geos(showcoastlines=True, coastlinecolor="Black", 
-                      showland=True, landcolor="white", 
-                      showocean=True, oceancolor="LightBlue")
+fig_globe.update_geos(
+    fitbounds="locations",
+    visible=True
+)
+
 
 fig_globe.update_layout(template='plotly_dark')
 
