@@ -55,7 +55,12 @@ fig_globe.update_geos(
 )
 
 
-fig_globe.update_layout(template='plotly_dark')
+fig_globe.update_layout(
+    geo=dict(
+        bgcolor='rgba(0,0,0,0)',
+        showland=True,
+        showcountries=True
+    )
 
 st.plotly_chart(fig_globe)
 
