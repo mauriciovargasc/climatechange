@@ -1,3 +1,4 @@
+$ pip install -r requirements.txt
 import streamlit as st
 import pandas as pd
 import plotly.express as px
@@ -11,8 +12,8 @@ import json
 # Load data
 @st.cache
 def load_data():
-    data = pd.read_csv(r"C:\Users\puert\OneDrive\Documents\Professional\projects\climatechangeKaggle\climate_change_indicators.csv")  # Update with your file path
-    with open(r"C:\Users\puert\OneDrive\Documents\Professional\projects\climatechangeKaggle\countries.geojson") as f:  # Update with your file path
+    data = pd.read_csv(r"climate_change_indicators.csv")  # Update with your file path
+    with open(r"countries.geojson") as f:  # Update with your file path
         geojson_data = json.load(f)
     return data, geojson_data
 
