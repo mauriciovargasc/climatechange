@@ -1,2 +1,7 @@
-streamlit-nightly
+streamlit
 pandas
+plotly
+statsmodels
+scikit-learn
+numpy
+
