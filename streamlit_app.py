@@ -195,3 +195,33 @@ fig5.update_layout(
 )
 st.plotly_chart(fig5)
 
+# Section 7: Exponential Smoothing Forecast
+st.header("Temperature Change Forecast")
+years_series = pd.Series(temperature_change, index=years.flatten())
+es_model = ExponentialSmoothing(years_series, trend='add', seasonal=None, seasonal_periods=None).fit()
+forecast_years = np.arange(2023, 2033)
+forecast = es_model.forecast(len(forecast_years))
+
+fig6 = go.Figure()
+fig6.add_trace(go.Scatter(
+    x=years.flatten(),
+    y=temperature_change,
+    mode='lines+markers',
+    name='Observed',
+    line=dict(color='blue')
+))
+fig6.add_trace(go.Scatter(
+    x=np.append(years.flatten(), forecast_years),
+    y=np.append(temperature_change, forecast),
+    mode='lines',
+    name='Forecast',
+    line=dict(dash='dash', color='red')
+))
+fig6.update_layout(
+    title='Temperature Change Forecast (1961-2032)',
+    xaxis_title='Year',
+    yaxis_title='Temperature Change (°C)',
+    template='plotly_dark'
+)
+st.plotly_chart(fig6)
+
