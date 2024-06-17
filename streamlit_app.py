@@ -60,7 +60,7 @@ fig_globe.update_layout(
         bgcolor='rgba(0,0,0,0)',
         showland=True,
         showcountries=True
-    )
+    ))
 
 st.plotly_chart(fig_globe)
 
