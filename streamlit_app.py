@@ -11,8 +11,8 @@ import json
 # Load data
 @st.cache
 def load_data():
-    data = pd.read_csv('path/to/your/climate_change_indicators.csv')  # Update with your file path
-    with open('path/to/your/countries.geojson') as f:  # Update with your file path
+    data = pd.read_csv(r"C:\Users\puert\OneDrive\Documents\Professional\projects\climatechangeKaggle\climate_change_indicators.csv")  # Update with your file path
+    with open(r"C:\Users\puert\OneDrive\Documents\Professional\projects\climatechangeKaggle\countries.geojson") as f:  # Update with your file path
         geojson_data = json.load(f)
     return data, geojson_data
 
