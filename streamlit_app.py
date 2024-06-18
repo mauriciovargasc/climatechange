@@ -183,6 +183,8 @@ fig4 = px.bar(rate_of_heating_per_decade_df,
               labels={'Rate of Heating': 'Temperature Change (°C)'},
               template='plotly_dark',
               color_discrete_sequence=['royalblue'])
+average_rate_of_heating_per_decade = rate_of_heating_per_decade.mean()
+st.write(f'Average Rate of Heating Per Decade: {average_rate_of_heating_per_decade:.4f} °C')
 st.plotly_chart(fig4)
 
 # Section 6: Linear and Quadratic Regression
