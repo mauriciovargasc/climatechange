@@ -63,7 +63,7 @@ with st.container():
             yaxis_title='Temperature Change (°C)',
             template='plotly_dark'
         )
-        st.plotly_chart(fig1)
+        st.plotly_chart(fig1, use_container_width=True)
 
     with fig_col2:
         st.subheader("Temperature Change Forecast")
@@ -103,7 +103,7 @@ with st.container():
             yaxis_title='Temperature Change (°C)',
             template='plotly_dark'
         )
-        st.plotly_chart(fig6)
+        st.plotly_chart(fig6, use_container_width=True)
 
 # Additional Figures
 with st.container():
@@ -128,7 +128,7 @@ with st.container():
             yaxis_title='Country',
             template='plotly_dark'
         )
-        st.plotly_chart(fig2)
+        st.plotly_chart(fig2, use_container_width=True)
 
     with fig_col4:
         st.subheader("Temperature Trends in Northern vs Southern Hemisphere")
@@ -192,7 +192,7 @@ with st.container():
             yaxis_title='Temperature Change (°C)',
             template='plotly_dark'
         )
-        st.plotly_chart(fig3)
+        st.plotly_chart(fig3, use_container_width=True)
 
 # One more figure in full width
 
@@ -224,5 +224,5 @@ with st.container():
             showcountries=True
         ))
 
-    st.plotly_chart(fig_globe)
+    st.plotly_chart(fig_globe, use_container_width=True)
 
