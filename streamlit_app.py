@@ -1,4 +1,5 @@
 import streamlit as st
+import pydeck as pdk
 import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
@@ -199,31 +200,33 @@ with st.container():
 # One more figure in full width
 
 with st.container():
-    st.subheader("3D Globe Visualization of Average Mean Temperature Change")
-    mean_temp_change_all_years = data[['Country']].copy()
-    mean_temp_change_all_years['Temperature Change'] = data.loc[:, '1961':'2022'].mean(axis=1)
-
-    # Plotting the average mean temperature change on a 3D globe
-    fig_globe = px.choropleth(mean_temp_change_all_years,
-                            geojson=geojson_data,
-                            locations='Country',
-                            featureidkey='properties.ADMIN',
-                            color='Temperature Change',
-                            hover_name='Country',
-                            projection='orthographic',
-                            color_continuous_scale=tomato_colors,
-                            title='Average Mean Temperature Change (1961-2022)')
-
-    fig_globe.update_geos(
-        fitbounds="locations",
-        visible=True
-    )
-
-    fig_globe.update_layout(
-        geo=dict(
-            bgcolor='rgba(0,0,0,0)',
-            showland=True,
-            showcountries=True
-        ))
-
-    st.plotly_chart(fig_globe)
+    if 'latitude' not in data.columns or 'longitude' not in data.columns or 'temperature_change' not in data.columns:
+    st.error("Data must contain 'latitude', 'longitude', and 'temperature_change' columns.")
+    else:
+        # Define the Pydeck layer
+        layer = pdk.Layer(
+            'ScatterplotLayer',
+            data,
+            get_position='[longitude, latitude]',
+            get_color='[200, 30, 0, 160]',
+            get_radius='temperature_change * 10000',
+            pickable=True
+        )
+    
+        # Define the Pydeck view (globe view)
+        view_state = pdk.ViewState(
+            latitude=0,
+            longitude=0,
+            zoom=1,
+            pitch=0,
+        )
+    
+        # Define the Pydeck deck
+        deck = pdk.Deck(
+            layers=[layer],
+            initial_view_state=view_state,
+            tooltip={"text": "Temperature Change: {temperature_change}"}
+        )
+    
+        # Render the Pydeck visualization in Streamlit
+        st.pydeck_chart(deck)
