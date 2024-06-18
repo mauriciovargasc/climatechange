@@ -1,15 +1,12 @@
 import streamlit as st
-import pydeck as pdk
 import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
 from statsmodels.tsa.holtwinters import ExponentialSmoothing
-from sklearn.linear_model import LinearRegression
-from sklearn.metrics import mean_squared_error
 import numpy as np
 import json
 
-@st.cache
+@st.cache_data
 def load_data():
     data = pd.read_csv(r"climate_change_indicators.csv")  # Update with your file path
     with open(r"countries.geojson") as f:  # Update with your file path
@@ -136,39 +133,39 @@ with st.container():
     with fig_col4:
         st.subheader("Temperature Trends in Northern vs Southern Hemisphere")
         northern_hemisphere = [
-            'Afghanistan, Islamic Rep. of', 'Albania', 'Algeria', 'Andorra, Principality of', 'Angola', 'Armenia, Rep. of',
-            'Austria', 'Azerbaijan, Rep. of', 'Bahamas, The', 'Bahrain, Kingdom of', 'Bangladesh', 'Belarus, Rep. of',
+            'Afghanistan', 'Albania', 'Algeria', 'Andorra', 'Angola', 'Armenia',
+            'Austria', 'Azerbaijan', 'Bahamas', 'Bahrain', 'Bangladesh', 'Belarus',
             'Belgium', 'Belize', 'Benin', 'Bhutan', 'Bolivia', 'Bosnia and Herzegovina', 'Botswana', 'Brunei Darussalam',
             'Bulgaria', 'Burkina Faso', 'Burundi', 'Cabo Verde', 'Cambodia', 'Cameroon', 'Canada', 'Cayman Islands',
-            'Central African Rep.', 'Chad', 'China, P.R.: Hong Kong', 'China, P.R.: Macao', 'China, P.R.: Mainland', 'Colombia',
-            'Comoros, Union of the', 'Congo, Dem. Rep. of the', 'Congo, Rep. of', 'Costa Rica', 'Croatia, Rep. of', 'Cuba',
-            'Cyprus', 'Czech Rep.', 'Denmark', 'Djibouti', 'Dominica', 'Dominican Rep.', 'Ecuador', 'Egypt, Arab Rep. of',
-            'El Salvador', 'Equatorial Guinea, Rep. of', 'Eritrea, The State of', 'Estonia, Rep. of', 'Eswatini, Kingdom of',
-            'Ethiopia, The Federal Dem. Rep. of', 'Finland', 'France', 'Gabon', 'Gambia, The', 'Georgia', 'Germany', 'Ghana',
+            'Central African Republic', 'Chad', 'China', 'Colombia',
+            'Comoros', 'Congo', 'Costa Rica', 'Croatia', 'Cuba',
+            'Cyprus', 'Czech Republic', 'Denmark', 'Djibouti', 'Dominica', 'Dominican Republic', 'Ecuador', 'Egypt',
+            'El Salvador', 'Equatorial Guinea', 'Eritrea', 'Estonia', 'Eswatini',
+            'Ethiopia', 'Finland', 'France', 'Gabon', 'Gambia', 'Georgia', 'Germany', 'Ghana',
             'Gibraltar', 'Greece', 'Greenland', 'Grenada', 'Guadeloupe', 'Guatemala', 'Guinea', 'Guinea-Bissau', 'Guyana',
-            'Haiti', 'Holy See', 'Honduras', 'Hungary', 'Iceland', 'India', 'Iran, Islamic Rep. of', 'Iraq', 'Ireland',
-            'Isle of Man', 'Israel', 'Italy', 'Jamaica', 'Japan', 'Jordan', 'Kazakhstan, Rep. of', 'Kuwait', 'Kyrgyz Rep.',
-            'Lao People\'s Dem. Rep.', 'Latvia', 'Lebanon', 'Liberia', 'Libya', 'Liechtenstein', 'Lithuania', 'Luxembourg',
-            'Malaysia', 'Maldives', 'Malta', 'Mauritania, Islamic Rep. of', 'Mauritius', 'Mexico', 'Moldova, Rep. of', 'Monaco',
-            'Mongolia', 'Montenegro', 'Morocco', 'Myanmar', 'Nepal', 'Netherlands, The', 'Nicaragua', 'Niger', 'Nigeria',
-            'North Macedonia, Republic of', 'Norway', 'Oman', 'Pakistan', 'Panama', 'Philippines', 'Poland, Rep. of', 'Portugal',
-            'Puerto Rico', 'Qatar', 'Romania', 'Russian Federation', 'Rwanda', 'San Marino, Rep. of', 'Saudi Arabia', 'Senegal',
-            'Serbia, Rep. of', 'Seychelles', 'Sierra Leone', 'Singapore', 'Slovak Rep.', 'Slovenia, Rep. of', 'Somalia', 'Spain',
+            'Haiti', 'Holy See', 'Honduras', 'Hungary', 'Iceland', 'India', 'Iran', 'Iraq', 'Ireland',
+            'Isle of Man', 'Israel', 'Italy', 'Jamaica', 'Japan', 'Jordan', 'Kazakhstan', 'Kuwait', 'Kyrgyzstan',
+            'Laos', 'Latvia', 'Lebanon', 'Liberia', 'Libya', 'Liechtenstein', 'Lithuania', 'Luxembourg',
+            'Malaysia', 'Maldives', 'Malta', 'Mauritania', 'Mauritius', 'Mexico', 'Moldova', 'Monaco',
+            'Mongolia', 'Montenegro', 'Morocco', 'Myanmar', 'Nepal', 'Netherlands', 'Nicaragua', 'Niger', 'Nigeria',
+            'North Macedonia', 'Norway', 'Oman', 'Pakistan', 'Panama', 'Philippines', 'Poland', 'Portugal',
+            'Puerto Rico', 'Qatar', 'Romania', 'Russia', 'Rwanda', 'San Marino', 'Saudi Arabia', 'Senegal',
+            'Serbia', 'Seychelles', 'Sierra Leone', 'Singapore', 'Slovakia', 'Slovenia', 'Somalia', 'Spain',
             'Sri Lanka', 'St. Kitts and Nevis', 'St. Lucia', 'St. Vincent and the Grenadines', 'Sudan', 'Suriname', 'Sweden',
-            'Switzerland', 'Syrian Arab Rep.', 'Taiwan Province of China', 'Tajikistan, Rep. of', 'Thailand', 'Timor-Leste, Dem. Rep. of',
+            'Switzerland', 'Syria', 'Taiwan', 'Tajikistan', 'Thailand', 'Timor-Leste',
             'Togo', 'Trinidad and Tobago', 'Tunisia', 'Turkmenistan', 'Uganda', 'Ukraine', 'United Arab Emirates', 'United Kingdom',
-            'United States', 'Uruguay', 'Uzbekistan, Rep. of', 'Venezuela, Rep. Bolivariana de', 'Vietnam', 'West Bank and Gaza',
-            'Western Sahara', 'Yemen, Rep. of', 'Zambia', 'Zimbabwe'
+            'United States', 'Uruguay', 'Uzbekistan', 'Venezuela', 'Vietnam', 'West Bank and Gaza',
+            'Western Sahara', 'Yemen', 'Zambia', 'Zimbabwe'
         ]
 
         southern_hemisphere = [
-            'American Samoa', 'Antigua and Barbuda', 'Argentina', 'Aruba, Kingdom of the Netherlands', 'Australia', 'Botswana',
-            'Brazil', 'Chile', 'Colombia', 'Cook Islands', 'Ecuador', 'Falkland Islands (Malvinas)', 'Fiji, Rep. of',
-            'French Polynesia', 'Indonesia', 'Kiribati', 'Madagascar, Rep. of', 'Malawi', 'Marshall Islands, Rep. of the',
-            'Mauritius', 'Mayotte', 'Mozambique, Rep. of', 'Namibia', 'Nauru, Rep. of', 'New Caledonia', 'New Zealand', 'Niue',
-            'Norfolk Island', 'Papua New Guinea', 'Paraguay', 'Peru', 'Pitcairn Islands', 'Samoa', 'São Tomé and Príncipe, Dem. Rep. of',
-            'Solomon Islands', 'South Africa', 'South Sudan, Rep. of', 'St. Helena', 'St. Pierre and Miquelon', 'Suriname',
-            'Tokelau', 'Tonga', 'Tuvalu', 'Uruguay', 'Vanuatu', 'Wallis and Futuna Islands'
+            'American Samoa', 'Antigua and Barbuda', 'Argentina', 'Aruba', 'Australia', 'Botswana',
+            'Brazil', 'Chile', 'Colombia', 'Cook Islands', 'Ecuador', 'Falkland Islands', 'Fiji',
+            'French Polynesia', 'Indonesia', 'Kiribati', 'Madagascar', 'Malawi', 'Marshall Islands',
+            'Mauritius', 'Mayotte', 'Mozambique', 'Namibia', 'Nauru', 'New Caledonia', 'New Zealand', 'Niue',
+            'Norfolk Island', 'Papua New Guinea', 'Paraguay', 'Peru', 'Pitcairn Islands', 'Samoa', 'São Tomé and Príncipe',
+            'Solomon Islands', 'South Africa', 'South Sudan', 'St. Helena', 'St. Pierre and Miquelon', 'Suriname',
+            'Tokelau', 'Tonga', 'Tuvalu', 'Uruguay', 'Vanuatu', 'Wallis and Futuna'
         ]
 
         data['Hemisphere'] = data['Country'].apply(lambda x: 'Northern' if x in northern_hemisphere else ('Southern' if x in southern_hemisphere else 'Other'))
@@ -228,3 +225,4 @@ with st.container():
         ))
 
     st.plotly_chart(fig_globe)
+
