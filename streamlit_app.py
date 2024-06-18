@@ -1,10 +1,4 @@
-I apologize for the inconvenience. Let me correct the layout using Streamlit's `st.columns` correctly and ensure the figures are arranged in a 2 by 3 layout.
 
-Here's the updated script:
-
-### Updated Streamlit Dashboard Script
-
-```python
 import streamlit as st
 import pandas as pd
 import plotly.express as px
