@@ -6,6 +6,8 @@ from statsmodels.tsa.holtwinters import ExponentialSmoothing
 import numpy as np
 import json
 
+st.set_page_config(layout="wide")
+
 @st.cache_data
 def load_data():
     data = pd.read_csv(r"climate_change_indicators.csv")  # Update with your file path
