@@ -1,3 +1,4 @@
+
 import streamlit as st
 import pandas as pd
 import plotly.express as px
@@ -8,6 +9,7 @@ from sklearn.metrics import mean_squared_error
 import numpy as np
 import json
 
+# Load data
 @st.cache
 def load_data():
     data = pd.read_csv(r"climate_change_indicators.csv")  # Update with your file path
@@ -17,7 +19,16 @@ def load_data():
 
 data, geojson_data = load_data()
 
-tomato_colors = [  #Define tomato colors
+st.set_page_config(
+    page_title="Climate Change",
+    page_icon=":bar_chart:",
+    layout="wide"
+)
+# Streamlit Layout
+st.title("Climate Change Dashboard")
+
+# Define a custom tomato-like color scale
+tomato_colors = [
     [0.0, 'rgb(255, 245, 238)'],
     [0.2, 'rgb(255, 228, 225)'],
     [0.4, 'rgb(255, 182, 193)'],
@@ -25,29 +36,45 @@ tomato_colors = [  #Define tomato colors
     [0.8, 'rgb(255, 127, 80)'],
     [1.0, 'rgb(255, 99, 71)']
 ]
-# Title of the Dashboard
-st.title('Climate Change Dashboard')
 
-# KPIs Section
-st.header('Key Rates')
-kpi1, kpi2, kpi3 = st.columns(3)
+# Section 1: 3D Globe Visualization of Average Mean Temperature Change
+st.header("3D Globe Visualization of Average Mean Temperature Change")
+mean_temp_change_all_years = data[['Country']].copy()
+mean_temp_change_all_years['Temperature Change'] = data.loc[:, '1961':'2022'].mean(axis=1)
 
-with kpi1:
-    st.metric(label="Heating Rate per Year", value="0.0242°C", delta="Placeholder")
+# Plotting the average mean temperature change on a 3D globe
+fig_globe = px.choropleth(mean_temp_change_all_years,
+                          geojson=geojson_data,
+                          locations='Country',
+                          featureidkey='properties.ADMIN',
+                          color='Temperature Change',
+                          hover_name='Country',
+                          projection='orthographic',
+                          color_continuous_scale=tomato_colors,
+                          title='Average Mean Temperature Change (1961-2022)')
 
-with kpi2:
-    st.metric(label="Heating Rate per Decade", value="0.224°C", delta="Placeholder")
+fig_globe.update_geos(
+    fitbounds="locations",
+    visible=True
+)
 
-with kpi3:
-    st.metric(label="Acceleration of Yearly Rate", value="0.00032°C", delta="Placeholder")
+fig_globe.update_layout(
+    geo=dict(
+        bgcolor='rgba(0,0,0,0)',
+        showland=True,
+        showcountries=True
+    ))
 
-# Figures Section
-st.header('Visualizations')
-fig_col1, fig_col2 = st.columns(2)
+st.plotly_chart(fig_globe)
 
-# Placeholder for Figures
-with fig_col1:
-    st.subheader("Mean Temperature Change Over the Years")
+# Arrange the next figures in a 2 by 3 layout
+
+# Row 1
+col1, col2 = st.columns(2)
+
+with col1:
+    # Section 2: Mean Temperature Change Over the Years
+    st.header("Mean Temperature Change Over the Years")
     mean_temp_change = data.loc[:, '1961':'2022'].mean()
     fig1 = go.Figure()
     fig1.add_trace(go.Scatter(
@@ -65,41 +92,9 @@ with fig_col1:
     )
     st.plotly_chart(fig1)
 
-with fig_col2:
-    st.subheader("Temperature Change Forecast")
-    years_series = pd.Series(temperature_change, index=years.flatten())
-    es_model = ExponentialSmoothing(years_series, trend='add', seasonal=None, seasonal_periods=None).fit()
-    forecast_years = np.arange(2023, 2033)
-    forecast = es_model.forecast(len(forecast_years))
-
-    fig6 = go.Figure()
-    fig6.add_trace(go.Scatter(
-        x=years.flatten(),
-        y=temperature_change,
-        mode='lines+markers',
-        name='Observed',
-        line=dict(color='royalblue')
-    ))
-    fig6.add_trace(go.Scatter(
-        x=np.append(years.flatten(), forecast_years),
-        y=np.append(temperature_change, forecast),
-        mode='lines',
-        name='Forecast',
-        line=dict(dash='dash', color='tomato')
-    ))
-    fig6.update_layout(
-        title='Temperature Change Forecast (1961-2032)',
-        xaxis_title='Year',
-        yaxis_title='Temperature Change (°C)',
-        template='plotly_dark'
-    )
-    st.plotly_chart(fig6)
-
-# Additional Figures
-fig_col4, fig_col5 = st.columns(2)
-
-with fig_col4:
-    st.subheader("Top N Countries with Highest Temperature Increase")
+with col2:
+    # Section 3: Top N Countries with Highest Temperature Increase
+    st.header("Top N Countries with Highest Temperature Increase")
     n = st.slider('Select Top N Countries', 1, 50, 10)  # Slider for selecting top N countries
     data['Temp_Increase'] = data['2022'] - data['1961']
     top_countries = data[['Country', 'Temp_Increase']].sort_values(by='Temp_Increase', ascending=False).head(n)
@@ -118,8 +113,12 @@ with fig_col4:
     )
     st.plotly_chart(fig2)
 
-with fig_col5:
-    st.subheader("Temperature Trends in Northern vs Southern Hemisphere")
+# Row 2
+col3, col4 = st.columns(2)
+
+with col3:
+    # Section 4: Temperature Trends in Hemispheres
+    st.header("Temperature Trends in Northern vs Southern Hemisphere")
     northern_hemisphere = [
         'Afghanistan, Islamic Rep. of', 'Albania', 'Algeria', 'Andorra, Principality of', 'Angola', 'Armenia, Rep. of',
         'Austria', 'Azerbaijan, Rep. of', 'Bahamas, The', 'Bahrain, Kingdom of', 'Bangladesh', 'Belarus, Rep. of',
@@ -182,32 +181,107 @@ with fig_col5:
     )
     st.plotly_chart(fig3)
 
-# One more figure in full width
-st.subheader("3D Globe Visualization of Average Mean Temperature Change")
-mean_temp_change_all_years = data[['Country']].copy()
-mean_temp_change_all_years['Temperature Change'] = data.loc[:, '1961':'2022'].mean(axis=1)
+with col4:
+    # Section 5: Rate of Heating per Decade
+    st.header("Rate of Heating Per Decade")
+    data_decades = data.loc[:, '1961':'2022']
+    def year_to_decade(year):
+        return f"{year // 10 * 10}s"
+    data_decades.columns = data_decades.columns.astype(int)
+    data_decades = data_decades.groupby(year_to_decade, axis=1).mean()
+    rate_of_heating_per_decade = data_decades.diff(axis=1).mean(axis=0)
+    rate_of_heating_per_decade_df = rate_of_heating_per_decade.reset_index()
+    rate_of_heating_per_decade_df.columns = ['Decade', 'Rate of Heating']
+    average_rate_of_heating_per_decade = rate_of_heating_per_decade.mean()
+    st.write(f'Average Rate of Heating Per Decade: {average_rate_of_heating_per_decade:.4f} °C')
+    fig4 = px.bar(rate_of_heating_per_decade_df, 
+                  x='Decade', 
+                  y='Rate of Heating',
+                  title='Rate of Heating Per Decade (1960s-2020s)',
+                  labels={'Rate of Heating': 'Temperature Change (°C)'},
+                  template='plotly_dark',
+                  color_discrete_sequence=['royalblue'])
+    st.plotly_chart(fig4)
 
-# Plotting the average mean temperature change on a 3D globe
-fig_globe = px.choropleth(mean_temp_change_all_years,
-                          geojson=geojson_data,
-                          locations='Country',
-                          featureidkey='properties.ADMIN',
-                          color='Temperature Change',
-                          hover_name='Country',
-                          projection='orthographic',
-                          color_continuous_scale=tomato_colors,
-                          title='Average Mean Temperature Change (1961-2022)')
+# Row 3
+col5, col6 = st.columns(2)
 
-fig_globe.update_geos(
-    fitbounds="locations",
-    visible=True
-)
-
-fig_globe.update_layout(
-    geo=dict(
-        bgcolor='rgba(0,0,0,0)',
-        showland=True,
-        showcountries=True
+with col5:
+    # Section 6: Linear and Quadratic Regression
+    st.header("Observed vs Predicted Temperature Change")
+    years = mean_temp_change.index.astype(int).values.reshape(-1, 1)
+    temperature_change = mean_temp_change.values
+    linear_regressor = LinearRegression()
+    linear_regressor.fit(years, temperature_change)
+    temperature_change_pred_linear = linear_regressor.predict(years)
+    quadratic_regressor = np.poly1d(np.polyfit(years.flatten(), temperature_change, 2))
+    temperature_change_pred_quad = quadratic_regressor(years.flatten())
+    r2_linear = linear_regressor.score(years, temperature_change)
+    mse_linear = mean_squared_error(temperature_change, temperature_change_pred_linear)
+    r2_quad = np.corrcoef(temperature_change, temperature_change_pred_quad)[0, 1]**2
+    mse_quad = mean_squared_error(temperature_change, temperature_change_pred_quad)
+    quadratic_coefficients = np.polyfit(years.flatten(), temperature_change, 2)
+    rate_of_acceleration = quadratic_coefficients[0]
+    st.write(f"Linear Model R^2: {r2_linear:.4f}, MSE: {mse_linear:.4f}")
+    st.write(f"Quadratic Model R^2: {r2_quad:.4f}, MSE: {mse_quad:.4f}")
+    st.write(f"Rate of Acceleration (Quadratic Term Coefficient): {rate_of_acceleration:.6f}")
+    fig5 = go.Figure()
+    fig5.add_trace(go.Scatter(
+        x=years.flatten(),
+        y=temperature_change,
+        mode='lines+markers',
+        name='Observed',
+        line=dict(color='royalblue')
     ))
+    fig5.add_trace(go.Scatter(
+        x=years.flatten(),
+        y=temperature_change_pred_linear,
+        mode='lines',
+        name='Linear Fit',
+        line=dict(dash='dash', color='tomato')
+    ))
+    fig5.add_trace(go.Scatter(
+        x=years.flatten(),
+        y=temperature_change_pred_quad,
+        mode='lines',
+        name='Quadratic Fit',
+        line=dict(dash='dot', color='yellowgreen')
+    ))
+    fig5.update_layout(
+        title='Observed vs Predicted Temperature Change (1961-2022)',
+        xaxis_title='Year',
+        yaxis_title='Temperature Change (°C)',
+        template='plotly_dark'
+    )
+    st.plotly_chart(fig5)
 
-st.plotly_chart(fig_globe)
+with col6:
+    # Section 7: Exponential Smoothing Forecast
+    st.header("Temperature Change Forecast")
+    years_series = pd.Series(temperature_change, index=years.flatten())
+    es_model = ExponentialSmoothing(years_series, trend='add', seasonal=None, seasonal_periods=None).fit()
+    forecast_years = np.arange(2023, 2033)
+    forecast = es_model.forecast(len(forecast_years))
+
+    fig6 = go.Figure()
+    fig6.add_trace(go.Scatter(
+        x=years.flatten(),
+        y=temperature_change,
+        mode='lines+markers',
+        name='Observed',
+        line=dict(color='royalblue')
+    ))
+    fig6.add_trace(go.Scatter(
+        x=np.append(years.flatten(), forecast_years),
+        y=np.append(temperature_change, forecast),
+        mode='lines',
+        name='Forecast',
+        line=dict(dash='dash', color='tomato')
+    ))
+    fig6.update_layout(
+        title='Temperature Change Forecast (1961-2032)',
+        xaxis_title='Year',
+        yaxis_title='Temperature Change (°C)',
+        template='plotly_dark'
+    )
+    st.plotly_chart(fig6)
