@@ -1,3 +1,10 @@
+I apologize for the inconvenience. Let me correct the layout using Streamlit's `st.columns` correctly and ensure the figures are arranged in a 2 by 3 layout.
+
+Here's the updated script:
+
+### Updated Streamlit Dashboard Script
+
+```python
 import streamlit as st
 import pandas as pd
 import plotly.express as px
@@ -18,9 +25,6 @@ def load_data():
 
 data, geojson_data = load_data()
 
-# Normalize country names
-iso3_to_country = {feature['properties']['ISO_A3']: feature['properties']['ADMIN'] for feature in geojson_data['features']}
-data['Country'] = data['ISO3'].map(iso3_to_country)
 
 # Streamlit Layout
 st.title("Climate Change Dashboard")
@@ -146,38 +150,38 @@ with col3:
     southern_hemisphere = [
         'American Samoa', 'Antigua and Barbuda', 'Argentina', 'Aruba, Kingdom of the Netherlands', 'Australia', 'Botswana',
         'Brazil', 'Chile', 'Colombia', 'Cook Islands', 'Ecuador', 'Falkland Islands (Malvinas)', 'Fiji, Rep. of',
-    'French Polynesia', 'Indonesia', 'Kiribati', 'Madagascar, Rep. of', 'Malawi', 'Marshall Islands, Rep. of the',
-    'Mauritius', 'Mayotte', 'Mozambique, Rep. of', 'Namibia', 'Nauru, Rep. of', 'New Caledonia', 'New Zealand', 'Niue',
-    'Norfolk Island', 'Papua New Guinea', 'Paraguay', 'Peru', 'Pitcairn Islands', 'Samoa', 'São Tomé and Príncipe, Dem. Rep. of',
-    'Solomon Islands', 'South Africa', 'South Sudan, Rep. of', 'St. Helena', 'St. Pierre and Miquelon', 'Suriname',
-    'Tokelau', 'Tonga', 'Tuvalu', 'Uruguay', 'Vanuatu', 'Wallis and Futuna Islands'
-]
+        'French Polynesia', 'Indonesia', 'Kiribati', 'Madagascar, Rep. of', 'Malawi', 'Marshall Islands, Rep. of the',
+        'Mauritius', 'Mayotte', 'Mozambique, Rep. of', 'Namibia', 'Nauru, Rep. of', 'New Caledonia', 'New Zealand', 'Niue',
+        'Norfolk Island', 'Papua New Guinea', 'Paraguay', 'Peru', 'Pitcairn Islands', 'Samoa', 'São Tomé and Príncipe, Dem. Rep. of',
+        'Solomon Islands', 'South Africa', 'South Sudan, Rep. of', 'St. Helena', 'St. Pierre and Miquelon', 'Suriname',
+        'Tokelau', 'Tonga', 'Tuvalu', 'Uruguay', 'Vanuatu', 'Wallis and Futuna Islands'
+    ]
 
-data['Hemisphere'] = data['Country'].apply(lambda x: 'Northern' if x in northern_hemisphere else ('Southern' if x in southern_hemisphere else 'Other'))
-mean_temp_change_north = data[data['Hemisphere'] == 'Northern'].loc[:, '1961':'2022'].mean()
-mean_temp_change_south = data[data['Hemisphere'] == 'Southern'].loc[:, '1961':'2022'].mean()
-fig3 = go.Figure()
-fig3.add_trace(go.Scatter(
-    x=mean_temp_change_north.index,
-    y=mean_temp_change_north.values,
-    mode='lines+markers',
-    name='Northern Hemisphere',
-    line=dict(color='royalblue')
-))
-fig3.add_trace(go.Scatter(
-    x=mean_temp_change_south.index,
-    y=mean_temp_change_south.values,
-    mode='lines+markers',
-    name='Southern Hemisphere',
-    line=dict(color='tomato')
-))
-fig3.update_layout(
-    title='Temperature Trends in Northern vs Southern Hemisphere (1961-2022)',
-    xaxis_title='Year',
-    yaxis_title='Temperature Change (°C)',
-    template='plotly_dark'
-)
-st.plotly_chart(fig3)
+    data['Hemisphere'] = data['Country'].apply(lambda x: 'Northern' if x in northern_hemisphere else ('Southern' if x in southern_hemisphere else 'Other'))
+    mean_temp_change_north = data[data['Hemisphere'] == 'Northern'].loc[:, '1961':'2022'].mean()
+    mean_temp_change_south = data[data['Hemisphere'] == 'Southern'].loc[:, '1961':'2022'].mean()
+    fig3 = go.Figure()
+    fig3.add_trace(go.Scatter(
+        x=mean_temp_change_north.index,
+        y=mean_temp_change_north.values,
+        mode='lines+markers',
+        name='Northern Hemisphere',
+        line=dict(color='royalblue')
+    ))
+    fig3.add_trace(go.Scatter(
+        x=mean_temp_change_south.index,
+        y=mean_temp_change_south.values,
+        mode='lines+markers',
+        name='Southern Hemisphere',
+        line=dict(color='tomato')
+    ))
+    fig3.update_layout(
+        title='Temperature Trends in Northern vs Southern Hemisphere (1961-2022)',
+        xaxis_title='Year',
+        yaxis_title='Temperature Change (°C)',
+        template='plotly_dark'
+    )
+    st.plotly_chart(fig3)
 
 with col4:
     # Section 5: Rate of Heating per Decade
