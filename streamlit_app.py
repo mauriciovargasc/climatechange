@@ -47,7 +47,7 @@ fig_col1, fig_col2 = st.columns(2)
 
 # Placeholder for Figures
 with fig_col1:
-    st.subheader("Mean Temperature Change Over the Years")
+    #st.subheader("Mean Temperature Change Over the Years")
     mean_temp_change = data.loc[:, '1961':'2022'].mean()
     fig1 = go.Figure()
     fig1.add_trace(go.Scatter(
@@ -66,7 +66,7 @@ with fig_col1:
     st.plotly_chart(fig1)
 
 with fig_col2:
-    st.subheader("Temperature Change Forecast")
+    #st.subheader("Temperature Change Forecast")
     # Calculate the mean temperature change for each year
     mean_temp_change = data.loc[:, '1961':'2022'].mean()
 
@@ -109,7 +109,7 @@ with fig_col2:
 fig_col4, fig_col5 = st.columns(2)
 
 with fig_col4:
-    st.subheader("Top N Countries with Highest Temperature Increase")
+    #st.subheader("Top N Countries with Highest Temperature Increase")
     n = st.slider('Select Top N Countries', 1, 50, 10)  # Slider for selecting top N countries
     data['Temp_Increase'] = data['2022'] - data['1961']
     top_countries = data[['Country', 'Temp_Increase']].sort_values(by='Temp_Increase', ascending=False).head(n)
@@ -129,7 +129,7 @@ with fig_col4:
     st.plotly_chart(fig2)
 
 with fig_col5:
-    st.subheader("Temperature Trends in Northern vs Southern Hemisphere")
+    #st.subheader("Temperature Trends in Northern vs Southern Hemisphere")
     northern_hemisphere = [
         'Afghanistan, Islamic Rep. of', 'Albania', 'Algeria', 'Andorra, Principality of', 'Angola', 'Armenia, Rep. of',
         'Austria', 'Azerbaijan, Rep. of', 'Bahamas, The', 'Bahrain, Kingdom of', 'Bangladesh', 'Belarus, Rep. of',
@@ -185,7 +185,7 @@ with fig_col5:
         line=dict(color='tomato')
     ))
     fig3.update_layout(
-        title='Temperature Trends in Northern vs Southern Hemisphere (1961-2022)',
+        title='Temperature Trends in Northern vs Southern Hemisphere',
         xaxis_title='Year',
         yaxis_title='Temperature Change (°C)',
         template='plotly_dark'
@@ -193,7 +193,7 @@ with fig_col5:
     st.plotly_chart(fig3)
 
 # One more figure in full width
-st.subheader("3D Globe Visualization of Average Mean Temperature Change")
+#st.subheader("3D Globe Visualization of Average Mean Temperature Change")
 mean_temp_change_all_years = data[['Country']].copy()
 mean_temp_change_all_years['Temperature Change'] = data.loc[:, '1961':'2022'].mean(axis=1)
 
