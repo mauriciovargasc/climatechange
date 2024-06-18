@@ -176,6 +176,7 @@ data_decades = data_decades.groupby(year_to_decade, axis=1).mean()
 rate_of_heating_per_decade = data_decades.diff(axis=1).mean(axis=0)
 rate_of_heating_per_decade_df = rate_of_heating_per_decade.reset_index()
 rate_of_heating_per_decade_df.columns = ['Decade', 'Rate of Heating']
+average_rate_of_heating_per_decade = rate_of_heating_per_decade.mean()
 st.write(f'Average Rate of Heating Per Decade: {average_rate_of_heating_per_decade:.4f} °C')
 fig4 = px.bar(rate_of_heating_per_decade_df, 
               x='Decade', 
@@ -184,7 +185,7 @@ fig4 = px.bar(rate_of_heating_per_decade_df,
               labels={'Rate of Heating': 'Temperature Change (°C)'},
               template='plotly_dark',
               color_discrete_sequence=['royalblue'])
-average_rate_of_heating_per_decade = rate_of_heating_per_decade.mean()
+
 st.plotly_chart(fig4)
 
 # Section 6: Linear and Quadratic Regression
