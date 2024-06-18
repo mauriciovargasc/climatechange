@@ -19,7 +19,11 @@ def load_data():
 
 data, geojson_data = load_data()
 
-
+st.set_page_config(
+    page_title="Climate Change",
+    page_icon=":bar_chart:",
+    layout="wide"
+)
 # Streamlit Layout
 st.title("Climate Change Dashboard")
 
