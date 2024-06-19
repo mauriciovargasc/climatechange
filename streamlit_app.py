@@ -116,30 +116,13 @@ with st.container():
 
     with fig_col3:
         st.subheader(" ")
-        data['Temp_Increase'] = data['2022'] 
-        top_countries = data[['Country', 'Temp_Increase']].sort_values(by='Temp_Increase', ascending=False).head(10)
-        top_countries = top_countries.sort_values(by='Temp_Increase')
-        fig2 = px.bar(top_countries, 
-                      x='Temp_Increase', 
-                      y='Country', 
-                      orientation='h', 
-                      color='Temp_Increase',
-                      color_continuous_scale=tomato_colors,
-                      title='Top 10 Countries with Highest Temperature Increase')
-        fig2.update_layout(
-            height=600,
-            xaxis_title='Temperature Increase (°C)',
-            yaxis_title='Country',
-            template='plotly_dark'
-        )
-        st.plotly_chart(fig2, use_container_width=True)
     
-        # Move the slider to the bottom
-        n = st.slider('Select Top N Countries', 1, 250, 10)  # Slider for selecting top N countries
-    
-        # Update the chart based on slider value
+        # Initial plot with default n value
+        data['Temp_Increase'] = data['2022']
+        n = 10  # Default value for top N countries
         top_countries = data[['Country', 'Temp_Increase']].sort_values(by='Temp_Increase', ascending=False).head(n)
         top_countries = top_countries.sort_values(by='Temp_Increase')
+        
         fig2 = px.bar(top_countries, 
                       x='Temp_Increase', 
                       y='Country', 
@@ -153,7 +136,30 @@ with st.container():
             yaxis_title='Country',
             template='plotly_dark'
         )
-        st.plotly_chart(fig2, use_container_width=True)
+        chart = st.plotly_chart(fig2, use_container_width=True)
+    
+        # Move the slider to the bottom
+        n = st.slider('Select Top N Countries', 1, 250, 10, key='n_slider')
+    
+        # Update the chart based on slider value
+        top_countries = data[['Country', 'Temp_Increase']].sort_values(by='Temp_Increase', ascending=False).head(n)
+        top_countries = top_countries.sort_values(by='Temp_Increase')
+        
+        fig2 = px.bar(top_countries, 
+                      x='Temp_Increase', 
+                      y='Country', 
+                      orientation='h', 
+                      color='Temp_Increase',
+                      color_continuous_scale=tomato_colors,
+                      title=f'Top {n} Countries with Highest Temperature Increase')
+        fig2.update_layout(
+            height=600,
+            xaxis_title='Temperature Increase (°C)',
+            yaxis_title='Country',
+            template='plotly_dark'
+        )
+        chart.plotly_chart(fig2, use_container_width=True)
+
     
            
     
