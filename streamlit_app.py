@@ -173,15 +173,37 @@ figQ.update_layout(
     template='plotly_dark'
 )
 
+# Define CSS styles
+st.markdown(
+    """
+    <style>
+    .kpi-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    .kpi-item {
+        text-align: center;
+        font-size: 1.5em;
+    }
+    </style>
+    """,
+    unsafe_allow_html=True
+)
+
+
+
 
 # KPIs Section
 st.header('Key Rates')
 with st.container():
     kpi1, kpi2, kpi3 = st.columns(3)
     with kpi1:
+        st.markdown('<div class="kpi-item">', unsafe_allow_html=True)
         st.metric(label="Heating Rate per Year", value="0.0242°C")
         with st.expander("See Linear Fit"):
-            st.plotly_chart(figL, use_container_width=True)
+            st.plotly_chart(figL, use_container_width=True)  # Replace with your figL
+        st.markdown('</div>', unsafe_allow_html=True)
     with kpi2:
         st.metric(label="Heating Rate per Decade", value="0.224°C")
         with st.expander("See Heating Rate per Decade"):
