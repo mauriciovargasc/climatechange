@@ -72,10 +72,10 @@ with st.container():
     kpi1, kpi2, kpi3 = st.columns(3)
     with kpi1:
         st.metric(label="Heating Rate per Year", value="0.0242°C")
-        with st.expander("See Heating Rate per Decade"):
-            st.plotly_chart(fig, use_container_width=True)
     with kpi2:
         st.metric(label="Heating Rate per Decade", value="0.224°C")
+            with st.expander("See Heating Rate per Decade"):
+                st.plotly_chart(fig, use_container_width=True)
 
     with kpi3:
         st.metric(label="Acceleration of Yearly Rate", value="0.00032°C")
