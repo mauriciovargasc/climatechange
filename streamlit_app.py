@@ -60,6 +60,7 @@ with st.container():
             line=dict(color='royalblue')
         ))
         fig1.update_layout(
+            height=600,
             title='Mean Temperature Change Over the Years',
             xaxis_title='Year',
             yaxis_title='Temperature Change (°C)',
@@ -100,6 +101,7 @@ with st.container():
             line=dict(dash='dash', color='tomato')
         ))
         fig6.update_layout(
+            height=600,
             title='Temperature Change Forecast',
             xaxis_title='Year',
             yaxis_title='Temperature Change (°C)',
