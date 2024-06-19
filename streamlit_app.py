@@ -222,7 +222,7 @@ with st.container():
                         color='Temperature Change',
                         hover_name='Country',
                         projection='orthographic',
-                        color_continuous_scale=tomato_colors
+                        color_continuous_scale="tomato_colors"
                         title='Temperature Change by 2022')
 
     fig_globe.update_geos(
