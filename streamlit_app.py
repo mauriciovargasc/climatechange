@@ -74,8 +74,6 @@ with st.container():
         st.metric(label="Heating Rate per Year", value="0.0242°C")
         with st.expander("See Heating Rate per Decade"):
             st.plotly_chart(fig, use_container_width=True)
-        if st.button("Expand Heating Rate per Decade Chart", key='kpi1'):
-            st.plotly_chart(fig, use_container_width=True)
     with kpi2:
         st.metric(label="Heating Rate per Decade", value="0.224°C")
 
