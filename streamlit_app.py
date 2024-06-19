@@ -184,7 +184,7 @@ st.markdown(
     }
     .kpi-item {
         text-align: center;
-        font-size: 2.5em;
+        font-size: 1.5em;
     }
     </style>
     """,
