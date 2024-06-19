@@ -128,6 +128,7 @@ with st.container():
                     color_continuous_scale=tomato_colors,
                     title=f'Top {n} Countries with Highest Temperature Increase')
         fig2.update_layout(
+            height=600,
             xaxis_title='Temperature Increase (°C)',
             yaxis_title='Country',
             template='plotly_dark'
@@ -191,6 +192,7 @@ with st.container():
             line=dict(color='tomato')
         ))
         fig3.update_layout(
+            height=600,
             title="Temperature Trends in Northern vs Southern Hemisphere",
             xaxis_title='Year',
             yaxis_title='Temperature Change (°C)',
@@ -235,6 +237,7 @@ with st.container():
     )
 
     fig_globe.update_layout(
+    height=600,
     geo=dict(
         bgcolor='rgba(0,0,0,0)',
         showland=True,
