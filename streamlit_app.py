@@ -47,7 +47,7 @@ with st.container():
 
     # Placeholder for Figures
     with fig_col1:
-        #st.subheader("Mean Temperature Change Over the Years")
+        st.subheader(" ")
         mean_temp_change = data.loc[:, '1961':'2022'].mean()
         fig1 = go.Figure()
         fig1.add_trace(go.Scatter(
@@ -66,7 +66,7 @@ with st.container():
         st.plotly_chart(fig1, use_container_width=True)
 
     with fig_col2:
-        #st.subheader("Temperature Change Forecast")
+        st.subheader(" ")
         # Calculate the mean temperature change for each year
         mean_temp_change = data.loc[:, '1961':'2022'].mean()
 
@@ -111,7 +111,7 @@ with st.container():
 
 
     with fig_col3:
-        #st.subheader("Top N Countries with Highest Temperature Increase")
+        st.subheader(" ")
         n = st.slider('Select Top N Countries', 1, 250, 10)  # Slider for selecting top N countries
         data['Temp_Increase'] = data['2022'] 
         top_countries = data[['Country', 'Temp_Increase']].sort_values(by='Temp_Increase', ascending=False).head(n)
@@ -197,7 +197,7 @@ with st.container():
 # One more figure in full width
 
 with st.container():
-    #st.subheader("3D Globe Visualization of Average Mean Temperature Change")
+    st.subheader(" ")
     # Calculate the temp change for 2022
     temp_change_2022 = data[['Country']].copy()
     temp_change_2022['Temperature Change'] = data['2022']
