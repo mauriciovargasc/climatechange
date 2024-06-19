@@ -166,7 +166,7 @@ with st.container():
            
 
     with fig_col4:
-        st.subheader("Temperature Trends in Northern vs Southern Hemisphere")
+        st.subheader(" ")
         northern_hemisphere = [
             'Afghanistan', 'Albania', 'Algeria', 'Andorra', 'Angola', 'Armenia',
             'Austria', 'Azerbaijan', 'Bahamas', 'Bahrain', 'Bangladesh', 'Belarus',
