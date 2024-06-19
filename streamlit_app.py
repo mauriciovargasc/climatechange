@@ -30,6 +30,45 @@ tomato_colors = [  #Define tomato colors
 # Title of the Dashboard
 st.title('Climate Change Dashboard')
 
+# Prepare data for linear regression
+years = mean_temp_change.index.astype(int).values.reshape(-1, 1)
+temperature_change = mean_temp_change.values
+
+# Fit linear regression model
+linear_regressor = LinearRegression()
+linear_regressor.fit(years, temperature_change)
+
+# Predict temperature change
+temperature_change_pred = linear_regressor.predict(years)
+
+# Plot the observed and predicted temperature change
+figL = go.Figure()
+
+# Add observed data
+figL.add_trace(go.Scatter(
+    x=years.flatten(),
+    y=temperature_change,
+    mode='lines+markers',
+    name='Observed',
+    line=dict(color='royalblue')
+))
+
+# Add linear fit
+figL.add_trace(go.Scatter(
+    x=years.flatten(),
+    y=temperature_change_pred,
+    mode='lines',
+    name='Linear Fit',
+    line=dict(dash='dash', color='tomato')
+))
+
+figL.update_layout(
+    title='Observed vs Predicted Temperature Change (1961-2022)',
+    xaxis_title='Year',
+    yaxis_title='Temperature Change (°C)',
+    template='plotly_dark'
+)
+
 # Calculate the mean temperature change for each decade
 data_decades = data.loc[:, '1961':'2022']
 
@@ -139,6 +178,8 @@ with st.container():
     kpi1, kpi2, kpi3 = st.columns(3)
     with kpi1:
         st.metric(label="Heating Rate per Year", value="0.0242°C")
+        with st.expander("See Linear Fit"):
+            st.plotly_chart(figL, use_container_width=True)
     with kpi2:
         st.metric(label="Heating Rate per Decade", value="0.224°C")
         with st.expander("See Heating Rate per Decade"):
