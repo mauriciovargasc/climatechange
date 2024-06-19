@@ -6,8 +6,6 @@ from statsmodels.tsa.holtwinters import ExponentialSmoothing
 import numpy as np
 import json
 
-st.set_page_config(layout="wide")
-
 @st.cache_data
 def load_data():
     data = pd.read_csv(r"climate_change_indicators.csv")  # Update with your file path
@@ -49,7 +47,7 @@ with st.container():
 
     # Placeholder for Figures
     with fig_col1:
-        st.subheader("Mean Temperature Change Over the Years")
+        #st.subheader("Mean Temperature Change Over the Years")
         mean_temp_change = data.loc[:, '1961':'2022'].mean()
         fig1 = go.Figure()
         fig1.add_trace(go.Scatter(
@@ -68,7 +66,7 @@ with st.container():
         st.plotly_chart(fig1, use_container_width=True)
 
     with fig_col2:
-        st.subheader("Temperature Change Forecast")
+        #st.subheader("Temperature Change Forecast")
         # Calculate the mean temperature change for each year
         mean_temp_change = data.loc[:, '1961':'2022'].mean()
 
@@ -100,7 +98,7 @@ with st.container():
             line=dict(dash='dash', color='tomato')
         ))
         fig6.update_layout(
-            title='Temperature Change Forecast (1961-2032)',
+            title='Temperature Change Forecast',
             xaxis_title='Year',
             yaxis_title='Temperature Change (°C)',
             template='plotly_dark'
@@ -113,9 +111,9 @@ with st.container():
 
 
     with fig_col3:
-        st.subheader("Top N Countries with Highest Temperature Increase")
-        n = st.slider('Select Top N Countries', 1, 50, 10)  # Slider for selecting top N countries
-        data['Temp_Increase'] = data['2022'] - data['1961']
+        #st.subheader("Top N Countries with Highest Temperature Increase")
+        n = st.slider('Select Top N Countries', 1, 250, 10)  # Slider for selecting top N countries
+        data['Temp_Increase'] = data['2022'] 
         top_countries = data[['Country', 'Temp_Increase']].sort_values(by='Temp_Increase', ascending=False).head(n)
         top_countries = top_countries.sort_values(by='Temp_Increase')
         fig2 = px.bar(top_countries, 
@@ -124,7 +122,7 @@ with st.container():
                     orientation='h', 
                     color='Temp_Increase',
                     color_continuous_scale=tomato_colors,
-                    title=f'Top {n} Countries with Highest Temperature Increase (1961-2022)')
+                    title=f'Top {n} Countries with Highest Temperature Increase')
         fig2.update_layout(
             xaxis_title='Temperature Increase (°C)',
             yaxis_title='Country',
@@ -133,7 +131,7 @@ with st.container():
         st.plotly_chart(fig2, use_container_width=True)
 
     with fig_col4:
-        st.subheader("Temperature Trends in Northern vs Southern Hemisphere")
+        #st.subheader("Temperature Trends in Northern vs Southern Hemisphere")
         northern_hemisphere = [
             'Afghanistan', 'Albania', 'Algeria', 'Andorra', 'Angola', 'Armenia',
             'Austria', 'Azerbaijan', 'Bahamas', 'Bahrain', 'Bangladesh', 'Belarus',
@@ -189,7 +187,7 @@ with st.container():
             line=dict(color='tomato')
         ))
         fig3.update_layout(
-            title='Temperature Trends in Northern vs Southern Hemisphere (1961-2022)',
+            title="Temperature Trends in Northern vs Southern Hemisphere",
             xaxis_title='Year',
             yaxis_title='Temperature Change (°C)',
             template='plotly_dark'
@@ -199,32 +197,44 @@ with st.container():
 # One more figure in full width
 
 with st.container():
-    st.subheader("3D Globe Visualization of Average Mean Temperature Change")
-    mean_temp_change_all_years = data[['Country']].copy()
-    mean_temp_change_all_years['Temperature Change'] = data.loc[:, '1961':'2022'].mean(axis=1)
+    #st.subheader("3D Globe Visualization of Average Mean Temperature Change")
+    # Calculate the temp change for 2022
+    temp_change_2022 = data[['Country']].copy()
+    temp_change_2022['Temperature Change'] = data['2022']
+
+
+    # Define a custom tomato-like color scale
+    tomato_colors = [
+        [0.0, 'rgb(255, 248, 247)'],
+        [0.2, 'rgb(255, 228, 225)'],
+        [0.4, 'rgb(255, 182, 193)'],
+        [0.6, 'rgb(255, 160, 122)'],
+        [0.8, 'rgb(255, 127, 80)'],
+        [1.0, 'rgb(255, 99, 71)']
+    ]
+
 
     # Plotting the average mean temperature change on a 3D globe
-    fig_globe = px.choropleth(mean_temp_change_all_years,
-                            geojson=geojson_data,
-                            locations='Country',
-                            featureidkey='properties.ADMIN',
-                            color='Temperature Change',
-                            hover_name='Country',
-                            projection='orthographic',
-                            color_continuous_scale=tomato_colors,
-                            title='Average Mean Temperature Change (1961-2022)')
+    fig_globe = px.choropleth(temp_change_2022,
+                        geojson=geojson_data,
+                        locations='Country',
+                        featureidkey='properties.ADMIN',
+                        color='Temperature Change',
+                        hover_name='Country',
+                        projection='orthographic',
+                        color_continuous_scale=tomato_colors
+                        title='Temperature Change by 2022')
 
     fig_globe.update_geos(
-        fitbounds="locations",
-        visible=True
+    fitbounds="locations",
+    visible=True
     )
 
     fig_globe.update_layout(
-        geo=dict(
-            bgcolor='rgba(0,0,0,0)',
-            showland=True,
-            showcountries=True
-        ))
-
+    geo=dict(
+        bgcolor='rgba(0,0,0,0)',
+        showland=True,
+        showcountries=True
+    ))
     st.plotly_chart(fig_globe, use_container_width=True)
 
