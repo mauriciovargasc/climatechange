@@ -116,22 +116,17 @@ with st.container():
 
     with fig_col3:
         st.subheader(" ")
-        data['Temp_Increase'] = data['2022']
-        
-        # Create a placeholder for the slider
-        slider_placeholder = st.empty()
-        
-        # Render the chart first
-        n = slider_placeholder.slider('Select Top N Countries', 1, 250, 10)  # Slider for selecting top N countries
+        data['Temp_Increase'] = data['2022'] 
+        n = st.slider('Select Top N Countries', 1, 250, 10)  # Slider for selecting top N countries
         top_countries = data[['Country', 'Temp_Increase']].sort_values(by='Temp_Increase', ascending=False).head(n)
         top_countries = top_countries.sort_values(by='Temp_Increase')
         fig2 = px.bar(top_countries, 
-                      x='Temp_Increase', 
-                      y='Country', 
-                      orientation='h', 
-                      color='Temp_Increase',
-                      color_continuous_scale=tomato_colors,
-                      title=f'Top {n} Countries with Highest Temperature Increase')
+                    x='Temp_Increase', 
+                    y='Country', 
+                    orientation='h', 
+                    color='Temp_Increase',
+                    color_continuous_scale=tomato_colors,
+                    title=f'Top {n} Countries with Highest Temperature Increase')
         fig2.update_layout(
             height=600,
             xaxis_title='Temperature Increase (°C)',
@@ -139,14 +134,12 @@ with st.container():
             template='plotly_dark'
         )
         st.plotly_chart(fig2, use_container_width=True)
-        
-        # Render the slider after the chart
-        n = slider_placeholder.slider('Select Top N Countries', 1, 250, 10, key='slider_below_chart')
-In this code:
        
+    
+           
 
     with fig_col4:
-        #st.subheader("Temperature Trends in Northern vs Southern Hemisphere")
+        st.subheader("Temperature Trends in Northern vs Southern Hemisphere")
         northern_hemisphere = [
             'Afghanistan', 'Albania', 'Algeria', 'Andorra', 'Angola', 'Armenia',
             'Austria', 'Azerbaijan', 'Bahamas', 'Bahrain', 'Bangladesh', 'Belarus',
