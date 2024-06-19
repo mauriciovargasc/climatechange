@@ -202,16 +202,20 @@ with st.container():
         st.markdown('<div class="kpi-item">', unsafe_allow_html=True)
         st.metric(label="Heating Rate per Year", value="0.0242°C")
         with st.expander("See Linear Fit"):
-            st.plotly_chart(figL, use_container_width=True)  # Replace with your figL
+            st.plotly_chart(figL, use_container_width=True)  
         st.markdown('</div>', unsafe_allow_html=True)
     with kpi2:
+        st.markdown('<div class="kpi-item">', unsafe_allow_html=True)
         st.metric(label="Heating Rate per Decade", value="0.224°C")
         with st.expander("See Heating Rate per Decade"):
             st.plotly_chart(fig, use_container_width=True)
+        st.markdown('</div>', unsafe_allow_html=True)
     with kpi3:
+        st.markdown('<div class="kpi-item">', unsafe_allow_html=True)
         st.metric(label="Acceleration of Yearly Rate", value="0.00032°C")
         with st.expander("See Quadratic Fit"):
-            st.plotly_chart(figQ, use_container_width=True)
+            st.plotly_chart(figQ, use_container_width=True)  
+        st.markdown('</div>', unsafe_allow_html=True)
 
 # Figures Section
 st.header('Visualizations')
