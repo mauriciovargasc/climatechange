@@ -30,6 +30,8 @@ tomato_colors = [  #Define tomato colors
 # Title of the Dashboard
 st.title('Climate Change Dashboard')
 
+mean_temp_change = data.loc[:, '1961':'2022'].mean()
+
 # Prepare data for linear regression
 years = mean_temp_change.index.astype(int).values.reshape(-1, 1)
 temperature_change = mean_temp_change.values
