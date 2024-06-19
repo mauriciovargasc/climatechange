@@ -28,13 +28,54 @@ tomato_colors = [  #Define tomato colors
 # Title of the Dashboard
 st.title('Climate Change Dashboard')
 
+# Calculate the mean temperature change for each decade
+data_decades = data.loc[:, '1961':'2022']
+
+# Create a function to map years to decades
+def year_to_decade(year):
+    return f"{year // 10 * 10}s"
+
+# Group by decades and calculate the mean temperature change for each decade
+data_decades.columns = data_decades.columns.astype(int)
+data_decades = data_decades.groupby(year_to_decade, axis=1).mean()
+
+# Calculate the rate of heating per decade
+rate_of_heating_per_decade = data_decades.diff(axis=1).mean(axis=0)
+
+# Prepare data for plotting
+rate_of_heating_per_decade_df = rate_of_heating_per_decade.reset_index()
+rate_of_heating_per_decade_df.columns = ['Decade', 'Rate of Heating']
+
+average_rate_of_heating = rate_of_heating_per_decade.mean()
+
+# Plot the rate of heating per decade using plotly
+fig = px.bar(rate_of_heating_per_decade_df, 
+             x='Decade', 
+             y='Rate of Heating',
+             title='Rate of Heating Per Decade (1960s-2020s)',
+             labels={'Rate of Heating': 'Temperature Change (°C)'},
+             template='plotly_dark',
+             color_discrete_sequence=['royalblue'])
+
+# Add an average line to the bar chart
+fig.add_trace(go.Scatter(
+    x=rate_of_heating_per_decade_df['Decade'],
+    y=[average_rate_of_heating] * len(rate_of_heating_per_decade_df),
+    mode='lines',
+    name='Average Rate of Heating',
+    line=dict(color='firebrick', width=2, dash='dash')
+))
+
 # KPIs Section
 st.header('Key Rates')
 with st.container():
     kpi1, kpi2, kpi3 = st.columns(3)
     with kpi1:
         st.metric(label="Heating Rate per Year", value="0.0242°C")
-
+        with st.expander("See Heating Rate per Decade"):
+            st.plotly_chart(fig, use_container_width=True)
+        if st.button("Expand Heating Rate per Decade Chart", key='kpi1'):
+            st.plotly_chart(fig, use_container_width=True)
     with kpi2:
         st.metric(label="Heating Rate per Decade", value="0.224°C")
 
