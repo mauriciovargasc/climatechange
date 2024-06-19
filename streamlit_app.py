@@ -3,6 +3,8 @@ import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
 from statsmodels.tsa.holtwinters import ExponentialSmoothing
+from sklearn.linear_model import LinearRegression
+from sklearn.metrics import mean_squared_error
 import numpy as np
 import json
 
