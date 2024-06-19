@@ -66,6 +66,71 @@ fig.add_trace(go.Scatter(
     line=dict(color='firebrick', width=2, dash='dash')
 ))
 
+
+# Fit linear regression model
+linear_regressor = LinearRegression()
+linear_regressor.fit(years, temperature_change)
+temperature_change_pred_linear = linear_regressor.predict(years)
+
+# Fit quadratic regression model
+quadratic_regressor = np.poly1d(np.polyfit(years.flatten(), temperature_change, 2))
+temperature_change_pred_quad = quadratic_regressor(years.flatten())
+
+# Calculate R^2 and MSE for linear model
+r2_linear = linear_regressor.score(years, temperature_change)
+mse_linear = mean_squared_error(temperature_change, temperature_change_pred_linear)
+
+# Calculate R^2 and MSE for quadratic model
+r2_quad = np.corrcoef(temperature_change, temperature_change_pred_quad)[0, 1]**2
+mse_quad = mean_squared_error(temperature_change, temperature_change_pred_quad)
+
+# Extract the quadratic term coefficient (rate of acceleration)
+quadratic_coefficients = np.polyfit(years.flatten(), temperature_change, 2)
+rate_of_acceleration = quadratic_coefficients[0]
+
+# Print the results
+print(f"Linear Model R^2: {r2_linear:.4f}, MSE: {mse_linear:.4f}")
+print(f"Quadratic Model R^2: {r2_quad:.4f}, MSE: {mse_quad:.4f}")
+print(f"Rate of Acceleration (Quadratic Term Coefficient): {rate_of_acceleration:.6f}")
+
+# Create an interactive plotly plot
+figQ = go.Figure()
+
+# Add observed data
+figQ.add_trace(go.Scatter(
+    x=years.flatten(),
+    y=temperature_change,
+    mode='lines+markers',
+    name='Observed',
+    line=dict(color='royalblue')
+))
+
+# Add linear fit
+figQ.add_trace(go.Scatter(
+    x=years.flatten(),
+    y=temperature_change_pred_linear,
+    mode='lines',
+    name='Linear Fit',
+    line=dict(dash='dash', color='tomato')
+))
+
+# Add quadratic fit
+figQ.add_trace(go.Scatter(
+    x=years.flatten(),
+    y=temperature_change_pred_quad,
+    mode='lines',
+    name='Quadratic Fit',
+    line=dict(dash='dot', color='yellowgreen')
+))
+
+figQ.update_layout(
+    title='Observed vs Predicted Temperature Change (1961-2022)',
+    xaxis_title='Year',
+    yaxis_title='Temperature Change (°C)',
+    template='plotly_dark'
+)
+
+
 # KPIs Section
 st.header('Key Rates')
 with st.container():
@@ -76,9 +141,10 @@ with st.container():
         st.metric(label="Heating Rate per Decade", value="0.224°C")
         with st.expander("See Heating Rate per Decade"):
             st.plotly_chart(fig, use_container_width=True)
-
     with kpi3:
         st.metric(label="Acceleration of Yearly Rate", value="0.00032°C")
+        with st.expander("See Quadratic Fit"):
+            st.plotly_chart(figQ, use_container_width=True)
 
 # Figures Section
 st.header('Visualizations')
