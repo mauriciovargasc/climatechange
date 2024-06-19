@@ -118,7 +118,7 @@ with st.container():
         st.subheader(" ")
         n = st.slider('Select Top N Countries', 1, 250, 10)  # Slider for selecting top N countries
         data['Temp_Increase'] = data['2022'] 
-        top_countries = data[['Country', 'Temp_Increase']].sort_values(by='Temp_Increase', ascending=False).head(n)
+        #top_countries = data[['Country', 'Temp_Increase']].sort_values(by='Temp_Increase', ascending=False).head(n)
         top_countries = top_countries.sort_values(by='Temp_Increase')
         fig2 = px.bar(top_countries, 
                     x='Temp_Increase', 
