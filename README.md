@@ -12,5 +12,6 @@ Is the northern hemisphere changing differently to the southern hemisphere?
 Is there a specific rate of heating and is it accelerating? Can we forecast future rates of heating?
 What is the mean temperature change across years? Can we forecast the mean temperature change for future years?
 
-I. Finding dataset and cleaning 
-Dataset: https://www.kaggle.com/datasets/tarunrm09/climate-change-indicators/data
+I. Data collection/cleaning
+
+Datasets: https://www.kaggle.com/datasets/tarunrm09/climate-change-indicators/data ; https://github.com/datasets/geo-countries/blob/master/data/countries.geojson
