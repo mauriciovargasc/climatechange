@@ -15,9 +15,8 @@ What is the mean temperature change across years? Can we forecast the mean tempe
 I. Data collection/cleaning
 
 Datasets: https://www.kaggle.com/datasets/tarunrm09/climate-change-indicators/data 
-
-          https://github.com/datasets/geo-countries/blob/master/data/countries.geojson
           
+ https://github.com/datasets/geo-countries/blob/master/data/countries.geojson       
 Cleaning Summary:
   Handling Missing Values:
   
