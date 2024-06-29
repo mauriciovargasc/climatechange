@@ -15,3 +15,22 @@ What is the mean temperature change across years? Can we forecast the mean tempe
 I. Data collection/cleaning
 
 Datasets: https://www.kaggle.com/datasets/tarunrm09/climate-change-indicators/data ; https://github.com/datasets/geo-countries/blob/master/data/countries.geojson
+
+Summary:
+
+Handling Missing Values:
+
+Missing ISO2 codes were identified and corrected.
+Missing temperature data were identified, and a combination of linear interpolation followed by forward and backward fill was applied to handle the missing values.
+
+Data Types Conversion:
+Temperature data columns were converted to numeric types to facilitate interpolation and further analysis.
+
+Normalization of Year Columns:
+Year columns were renamed to remove the 'F' prefix for consistency and ease of analysis.
+Verification:
+
+Normalization of country:
+Matched country names by ISO3 identification to match the country names used in the countries.geojson file
+
+The cleaned dataset was verified to ensure no remaining missing values in the temperature data.
