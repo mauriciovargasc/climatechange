@@ -257,8 +257,8 @@ with st.container():
         # Fit Exponential Smoothing model
         es_model = ExponentialSmoothing(years_series, trend='add', seasonal=None, seasonal_periods=None).fit()
 
-        # Forecast future temperatures for the next 10 years
-        forecast_years = np.arange(2023, 2033)
+        # Forecast future temperatures for the next 20 years
+        forecast_years = np.arange(2023, 2043)
         forecast = es_model.forecast(len(forecast_years))
 
         fig6 = go.Figure()
