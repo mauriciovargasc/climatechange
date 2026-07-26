@@ -7,13 +7,18 @@ from sklearn.linear_model import LinearRegression
 from sklearn.metrics import mean_squared_error
 import numpy as np
 import json
+from pathlib import Path
 
 st.set_page_config(layout="wide")
 
+# Resolve data files relative to this file, not the working directory, so the
+# app runs regardless of where streamlit is invoked from
+BASE_DIR = Path(__file__).resolve().parent
+
 @st.cache_data
 def load_data():
-    data = pd.read_csv(r"climate_change_indicators.csv")  # Update with your file path
-    with open(r"countries.geojson") as f:  # Update with your file path
+    data = pd.read_csv(BASE_DIR / "climate_change_indicators.csv")
+    with open(BASE_DIR / "countries.geojson", encoding="utf-8") as f:
         geojson_data = json.load(f)
     return data, geojson_data
 
