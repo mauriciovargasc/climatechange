@@ -21,14 +21,20 @@
 # %%
 import pandas as pd
 import json
+from pathlib import Path
+
+# Resolve data files relative to this script so it runs from any working directory.
+# NOTE: this script expects the RAW Kaggle export (year columns prefixed with 'F').
+# It rewrites climate_change_indicators.csv in place, which is what the dashboard reads.
+BASE_DIR = Path(__file__).resolve().parent
 
 # Load the dataset
-file_path = r"C:\Users\puert\OneDrive\Documents\Professional\projects\climatechangeKaggle\climate_change_indicators.csv"
+file_path = BASE_DIR / "climate_change_indicators.csv"
 data = pd.read_csv(file_path)
 
 # Load the GeoJSON file
-geojson_path = r"C:\Users\puert\OneDrive\Documents\Professional\projects\climatechangeKaggle\countries.geojson"
-with open(geojson_path) as f:
+geojson_path = BASE_DIR / "countries.geojson"
+with open(geojson_path, encoding="utf-8") as f:
     geojson_data = json.load(f)
 
 
@@ -82,7 +88,7 @@ data[temperature_columns] = data[temperature_columns].apply(pd.to_numeric, error
 data[temperature_columns] = data[temperature_columns].interpolate(method='linear', axis=1)
 
 # Forward fill and backward fill to handle remaining missing values
-data[temperature_columns] = data[temperature_columns].fillna(method='ffill', axis=1).fillna(method='bfill', axis=1)
+data[temperature_columns] = data[temperature_columns].ffill(axis=1).bfill(axis=1)
 
 # Verify if there are any remaining missing values
 remaining_missing_values = data[temperature_columns].isnull().sum().sum()
@@ -109,7 +115,7 @@ normalized_countries
 
 # %%
 # Save the cleaned dataset
-cleaned_file_path = r"C:\Users\puert\OneDrive\Documents\Professional\projects\climatechangeKaggle\climate_change_indicators.csv"
+cleaned_file_path = BASE_DIR / "climate_change_indicators.csv"
 data.to_csv(cleaned_file_path, index=False)
 
 
