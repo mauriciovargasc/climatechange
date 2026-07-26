@@ -72,7 +72,7 @@ figL.update_layout(
 )
 
 # Calculate the mean temperature change for each decade
-data_decades = data.loc[:, '1961':'2022']
+data_decades = data.loc[:, '1961':'2022'].copy()
 
 # Create a function to map years to decades
 def year_to_decade(year):
@@ -80,7 +80,7 @@ def year_to_decade(year):
 
 # Group by decades and calculate the mean temperature change for each decade
 data_decades.columns = data_decades.columns.astype(int)
-data_decades = data_decades.groupby(year_to_decade, axis=1).mean()
+data_decades = data_decades.T.groupby(year_to_decade).mean().T
 
 # Calculate the rate of heating per decade
 rate_of_heating_per_decade = data_decades.diff(axis=1).mean(axis=0)
@@ -202,19 +202,19 @@ with st.container():
         st.markdown('<div class="kpi-item">', unsafe_allow_html=True)
         st.metric(label="Heating Rate per Year", value="0.0242°C")
         with st.expander("See Linear Fit"):
-            st.plotly_chart(figL, use_container_width=True)  
+            st.plotly_chart(figL, width='stretch')  
         st.markdown('</div>', unsafe_allow_html=True)
     with kpi2:
         st.markdown('<div class="kpi-item">', unsafe_allow_html=True)
         st.metric(label="Heating Rate per Decade", value="0.224°C")
         with st.expander("See Heating Rate per Decade"):
-            st.plotly_chart(fig, use_container_width=True)
+            st.plotly_chart(fig, width='stretch')
         st.markdown('</div>', unsafe_allow_html=True)
     with kpi3:
         st.markdown('<div class="kpi-item">', unsafe_allow_html=True)
         st.metric(label="Acceleration of Yearly Rate", value="0.00032°C")
         with st.expander("See Quadratic Fit"):
-            st.plotly_chart(figQ, use_container_width=True)  
+            st.plotly_chart(figQ, width='stretch')  
         st.markdown('</div>', unsafe_allow_html=True)
 
 # Figures Section
@@ -242,7 +242,7 @@ with st.container():
             yaxis_title='Temperature Change (°C)',
             template='plotly_dark'
         )
-        st.plotly_chart(fig1, use_container_width=True)
+        st.plotly_chart(fig1, width='stretch')
 
     with fig_col2:
         st.subheader(" ")
@@ -252,7 +252,10 @@ with st.container():
         # Prepare data for Exponential Smoothing
         years = mean_temp_change.index.astype(int).values.reshape(-1, 1)
         temperature_change = mean_temp_change.values
-        years_series = pd.Series(temperature_change, index=years.flatten())
+        years_series = pd.Series(
+            temperature_change,
+            index=pd.PeriodIndex(years.flatten(), freq='Y')
+        )
 
         # Fit Exponential Smoothing model
         es_model = ExponentialSmoothing(years_series, trend='add', seasonal=None, seasonal_periods=None).fit()
@@ -283,7 +286,7 @@ with st.container():
             yaxis_title='Temperature Change (°C)',
             template='plotly_dark'
         )
-        st.plotly_chart(fig6, use_container_width=True)
+        st.plotly_chart(fig6, width='stretch')
 
 # Additional Figures
 with st.container():
@@ -319,7 +322,7 @@ with st.container():
         )
         
         # Display the chart in the placeholder
-        chart_placeholder.plotly_chart(fig2, use_container_width=True)
+        chart_placeholder.plotly_chart(fig2, width='stretch')
 
     
            
@@ -389,7 +392,7 @@ with st.container():
             yaxis_title='Temperature Change (°C)',
             template='plotly_dark'
         )
-        st.plotly_chart(fig3, use_container_width=True)
+        st.plotly_chart(fig3, width='stretch')
 
 # One more figure in full width
 
@@ -434,5 +437,5 @@ with st.container():
         showland=True,
         showcountries=True
     ))
-    st.plotly_chart(fig_globe, use_container_width=True)
+    st.plotly_chart(fig_globe, width='stretch')
 

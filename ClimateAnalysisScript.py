@@ -5,17 +5,21 @@ import numpy as np
 import plotly.express as px
 import plotly.graph_objects as go
 import json
+from pathlib import Path
 from sklearn.linear_model import LinearRegression
 from sklearn.metrics import mean_squared_error
 from statsmodels.tsa.holtwinters import ExponentialSmoothing
 
+# Resolve data files relative to this script so it runs from any working directory
+BASE_DIR = Path(__file__).resolve().parent
+
 # Load the cleaned and normalized dataset
-file_path = r"C:\Users\puert\OneDrive\Documents\Professional\projects\climatechangeKaggle\climate_change_indicators.csv"
+file_path = BASE_DIR / "climate_change_indicators.csv"
 data = pd.read_csv(file_path)
 
 # Load the GeoJSON file for the 3D globe map
-geojson_path = r"C:\Users\puert\OneDrive\Documents\Professional\projects\climatechangeKaggle\countries.geojson"
-with open(geojson_path) as f:
+geojson_path = BASE_DIR / "countries.geojson"
+with open(geojson_path, encoding="utf-8") as f:
     geojson_data = json.load(f)
 
 # Display the first few rows of the DataFrame
@@ -242,7 +246,7 @@ rate_of_heating
 # %%
 #What is the rate of heating per decade
 # Calculate the mean temperature change for each decade
-data_decades = data.loc[:, '1961':'2022']
+data_decades = data.loc[:, '1961':'2022'].copy()
 
 # Create a function to map years to decades
 def year_to_decade(year):
@@ -250,7 +254,7 @@ def year_to_decade(year):
 
 # Group by decades and calculate the mean temperature change for each decade
 data_decades.columns = data_decades.columns.astype(int)
-data_decades = data_decades.groupby(year_to_decade, axis=1).mean()
+data_decades = data_decades.T.groupby(year_to_decade).mean().T
 
 # Calculate the rate of heating per decade
 rate_of_heating_per_decade = data_decades.diff(axis=1).mean(axis=0)
@@ -374,7 +378,10 @@ mean_temp_change = data.loc[:, '1961':'2022'].mean()
 # Prepare data for Exponential Smoothing
 years = mean_temp_change.index.astype(int).values.reshape(-1, 1)
 temperature_change = mean_temp_change.values
-years_series = pd.Series(temperature_change, index=years.flatten())
+years_series = pd.Series(
+    temperature_change,
+    index=pd.PeriodIndex(years.flatten(), freq='Y')
+)
 
 # Fit Exponential Smoothing model
 es_model = ExponentialSmoothing(years_series, trend='add', seasonal=None, seasonal_periods=None).fit()
@@ -457,6 +464,8 @@ geo=dict(
     showland=True,
     showcountries=True
 ))
+
+fig_globe.show()
 
 # %% [markdown]
 # The globe visualization shows a heatmap of temperature change progress up to 2022. It shows which countries have had the highest temperature change with regards to 1951-1980 baseline.
